@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/action_record"
         android:enabled="true"
         android:icon="@drawable/ic_add_circle_outline_black_24dp"
         android:title="Záznam"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_schedules"
+        android:id="@+id/action_stats"
         android:enabled="true"
         android:icon="@drawable/ic_timeline_black_24dp"
         android:title="Statistiky"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/action_profile"
         android:enabled="true"
         android:icon="@drawable/ic_person_outline_black_24dp"
         android:title="Profil"
