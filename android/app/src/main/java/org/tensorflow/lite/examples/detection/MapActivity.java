@@ -51,6 +51,7 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
                 break;
             }
         }
+        overridePendingTransition(0, 0);
         return true;
     }
 
