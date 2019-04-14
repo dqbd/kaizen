@@ -18,6 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#00000000">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,7 +28,6 @@
         android:background="@android:color/black"
         android:orientation="vertical">
 
-
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/container"
@@ -35,22 +35,27 @@
             android:layout_height="match_parent"
             tools:context="org.tensorflow.demo.CameraActivity" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:background="@color/semi_transparent">-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/tfl_logo" />-->
+        <!--</android.support.v7.widget.Toolbar>-->
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            app:menu="@menu/navigation"
+            app:itemBackground="@color/colorNavigation"
+            app:itemIconTint="@drawable/selector_menu"
+            app:itemTextColor="@drawable/selector_menu"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentTop="true"
-            android:background="@color/semi_transparent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/tfl_logo" />
-        </android.support.v7.widget.Toolbar>
-
+            android:layout_alignParentBottom="true"
+            android:layout_height="52dp" />
     </RelativeLayout>
-
-    <include
-        android:id="@+id/bottom_sheet_layout"
-        layout="@layout/layout_bottom_sheet" />
 </android.support.design.widget.CoordinatorLayout>

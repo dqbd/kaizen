@@ -2,7 +2,17 @@
 <resources>
     <color name="colorPrimary">#98999b</color>
     <color name="colorPrimaryDark">#404041</color>
-    <color name="colorAccent">#d2d0d1</color>
+    <color name="colorAccent">#76FF03</color>
+
+
+
+    <color name="colorNavigation">#fff</color>
+    <color name="colorNavigationActive">#FFC107</color>
+    <color name="colorNavigationInactive">#263238</color>
+    <color name="colorText">#37474F</color>
 
     <color name="semi_transparent">#66000000</color>
+
+    <color name="colorAvatarBorder">#000</color>
+
 </resources>

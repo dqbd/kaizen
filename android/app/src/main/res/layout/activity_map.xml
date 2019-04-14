@@ -8,15 +8,47 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1565C0"
-        android:paddingBottom="10dp">
+        android:layout_height="match_parent">
 
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/map_item" />
+            android:orientation="vertical"
+            android:layout_above="@+id/navigation"
+            android:background="#90CAF9">
+
+            <RelativeLayout
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="400dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/map_item"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                />
+            </RelativeLayout>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            app:menu="@menu/navigation"
+            app:itemBackground="@color/colorNavigation"
+            app:itemIconTint="@drawable/selector_menu"
+            app:itemTextColor="@drawable/selector_menu"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="52dp" />
+
+
     </RelativeLayout>
 
 
