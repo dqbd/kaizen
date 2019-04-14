@@ -302,6 +302,7 @@ public abstract class CameraActivity extends AppCompatActivity
     LOGGER.d("onResume " + this);
     super.onResume();
 
+
     handlerThread = new HandlerThread("inference");
     handlerThread.start();
     handler = new Handler(handlerThread.getLooper());

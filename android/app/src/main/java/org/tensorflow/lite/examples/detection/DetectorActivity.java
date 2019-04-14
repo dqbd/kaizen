@@ -26,6 +26,8 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Size;
 import android.util.TypedValue;
@@ -83,6 +85,33 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   private byte[] luminanceCopy;
 
   private BorderedText borderedText;
+
+  private Handler testHandler;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    testHandler = new Handler();
+  }
+
+  @Override
+  public synchronized void onResume() {
+    super.onResume();
+
+    testHandler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        setNumThreads(2);
+
+        testHandler.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            setNumThreads(1);
+          }
+        }, 100);
+      }
+    }, 100);
+  }
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
