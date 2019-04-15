@@ -1,5 +1,9 @@
 package org.tensorflow.lite.examples.detection.dummy;
 
+import android.content.Context;
+
+import org.tensorflow.lite.examples.detection.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,29 +29,19 @@ public class DummyContent {
 
     private static final int COUNT = 25;
 
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
-        }
-    }
-
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
-    }
 
-    private static String makeDetails(int position) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
-        for (int i = 0; i < position; i++) {
-            builder.append("\nMore details information here.");
+    public static List<DummyItem> initializeItems(Context context) {
+        if (ITEMS.size() == 0) {
+            addItem(new DummyItem("1", "Jana Šťastná", "Kolo", "Ujela jsem 16 km, ušetřil 1300g CO2", "Další", R.drawable.kolo, R.drawable.avatar2));
+            addItem(new DummyItem("2", "Jára Cimrman", "Oblečení", "Dnešní úlovek ze sekáče, slow fashion", "Další", R.drawable.obleceni, R.drawable.avatar));
+            addItem(new DummyItem("3", "Jan Novák", "Jídlo", "Nakoupil jsem na místním farmářskem trhu", "Další", R.drawable.jidlo, R.drawable.avatar3));
         }
-        return builder.toString();
+        return ITEMS;
     }
 
     /**
@@ -55,13 +49,21 @@ public class DummyContent {
      */
     public static class DummyItem {
         public final String id;
+        public final int avatar;
+        public final String user;
+        public final String label;
         public final String content;
         public final String details;
+        public final int image;
 
-        public DummyItem(String id, String content, String details) {
+        public DummyItem(String id, String user, String label, String content, String details, int bitmap, int avatar) {
             this.id = id;
+            this.label = label;
             this.content = content;
             this.details = details;
+            this.image = bitmap;
+            this.user = user;
+            this.avatar = avatar;
         }
 
         @Override

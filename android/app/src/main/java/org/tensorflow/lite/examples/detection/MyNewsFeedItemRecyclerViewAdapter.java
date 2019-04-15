@@ -1,15 +1,22 @@
 package org.tensorflow.lite.examples.detection;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.tensorflow.lite.examples.detection.NewsFeedItemFragment.OnListFragmentInteractionListener;
 import org.tensorflow.lite.examples.detection.dummy.DummyContent.DummyItem;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -35,7 +42,20 @@ public class MyNewsFeedItemRecyclerViewAdapter extends RecyclerView.Adapter<MyNe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        DummyItem item =  holder.mItem = mValues.get(position);
+
+        TextView user = holder.mView.findViewById(R.id.newsfeed_username);
+        user.setText(item.user);
+
+
+        CircleImageView avatar = holder.mView.findViewById(R.id.newsfeed_avatar);
+        avatar.setImageResource(item.avatar);
+
+        TextView content = holder.mView.findViewById(R.id.newsfeed_content);
+        content.setText(item.content);
+
+        ImageView imgView = holder.mView.findViewById(R.id.newsfeed_imageView);
+        imgView.setImageBitmap(BitmapFactory.decodeResource(imgView.getContext().getResources(), item.image));
 
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +72,7 @@ public class MyNewsFeedItemRecyclerViewAdapter extends RecyclerView.Adapter<MyNe
 
     @Override
     public int getItemCount() {
+        Log.i("ITEMS", "A " + mValues.size());
         return mValues.size();
     }
 
