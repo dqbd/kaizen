@@ -36,6 +36,8 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -121,9 +123,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           public void run() {
             setNumThreads(1);
           }
-        }, 100);
+        }, 500);
       }
-    }, 100);
+    }, 500);
   }
 
   @Override
@@ -187,6 +189,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
           }
         });
+
+    trackingOverlay.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        MessagesAdapter.INSTANCE.addServerImage(rgbFrameBitmap);
+        return true;
+      }
+    });
   }
 
   @Override

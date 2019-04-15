@@ -17,6 +17,8 @@
 package org.tensorflow.lite.examples.detection;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;

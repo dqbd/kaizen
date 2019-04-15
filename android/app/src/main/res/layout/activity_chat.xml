@@ -35,6 +35,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:inputHint=""/>
+
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            app:menu="@menu/navigation"
+            app:itemBackground="@color/colorNavigation"
+            app:itemIconTint="@drawable/selector_menu"
+            app:itemTextColor="@drawable/selector_menu"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="52dp" />
+
     </RelativeLayout>
 
 

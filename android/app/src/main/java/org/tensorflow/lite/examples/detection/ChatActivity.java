@@ -25,12 +25,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        MessagesListAdapter<Message> adapter = new MessagesListAdapter<>("me", new ImageLoader() {
-            @Override
-            public void loadImage(ImageView imageView, @Nullable String url, @Nullable Object payload) {
-                return;
-            }
-        });
+        MessagesListAdapter<Message> adapter = MessagesAdapter.INSTANCE;
         MessagesList messagesList = findViewById(R.id.messagesList);
         messagesList.setAdapter(adapter);
 
