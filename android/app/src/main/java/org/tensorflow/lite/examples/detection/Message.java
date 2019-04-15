@@ -1,15 +1,19 @@
 package org.tensorflow.lite.examples.detection;
 
+import android.support.annotation.Nullable;
+
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
+import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-public class Message implements IMessage {
+public class Message implements IMessage, MessageContentType.Image {
     private String id;
     private String text;
     private Author author;
     private Date date;
+    private String imageUrl;
 
     public Message(String id, String text, Author author) {
         this.id = id;
@@ -38,6 +42,16 @@ public class Message implements IMessage {
     @Override
     public Date getCreatedAt() {
         return date;
+    }
+
+    @Nullable
+    @Override
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
 

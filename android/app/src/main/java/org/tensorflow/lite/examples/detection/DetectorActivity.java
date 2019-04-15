@@ -36,6 +36,8 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -187,6 +189,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
           }
         });
+
+    trackingOverlay.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        MessagesAdapter.INSTANCE.addServerImage(croppedBitmap);
+        startActivity(new Intent(DetectorActivity.this, ChatActivity.class));
+      }
+    });
   }
 
   @Override
