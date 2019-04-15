@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccentLight"
     tools:context=".NewsFeed">
 
     <android.support.design.widget.BottomNavigationView
@@ -27,8 +28,7 @@
         android:name="org.tensorflow.lite.examples.detection.NewsFeedItemFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="60dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

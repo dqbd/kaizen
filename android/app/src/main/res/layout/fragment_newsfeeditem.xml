@@ -5,16 +5,16 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10dp"
-    android:background="#eee"
+    android:padding="24dp"
+    android:background="@drawable/card_drawable"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp">
-
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+    >
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/newsfeed_avatar"
@@ -24,46 +24,57 @@
         </de.hdodenhof.circleimageview.CircleImageView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/newsfeed_username"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pepa Novák"
-                android:textAppearance="?attr/textAppearanceListItem" />
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:id="@+id/newsfeed_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oxygen"
+                    android:text="Pepa Novák"
+                    android:textAppearance="?attr/textAppearanceListItem" />
+
+                <TextView
+                    android:id="@+id/newsfeed_date"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:layout_height="22dp"
+                    android:fontFamily="@font/oxygen"
+                    android:text="Před chvílí" />
+
+            </LinearLayout>
+
+
 
             <TextView
-                android:id="@+id/newsfeed_date"
-                android:layout_width="wrap_content"
-                android:layout_height="22dp"
-                android:text="Před chvílí" />
-
+                android:id="@+id/newsfeed_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:fontFamily="@font/oxygen"
+                android:paddingStart="32dp"
+                android:textColor="#fff"
+                android:text="hello world"
+                android:background="@drawable/item_bubble"
+                android:paddingBottom="4dip" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/newsfeed_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:padding="10dp"
-        android:background="#dddddd"
-        android:paddingBottom="4dip" />
-
     <ImageView
         android:id="@+id/newsfeed_imageView"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
