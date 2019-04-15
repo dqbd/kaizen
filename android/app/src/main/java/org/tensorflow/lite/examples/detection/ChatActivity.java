@@ -1,5 +1,6 @@
 package org.tensorflow.lite.examples.detection;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -28,12 +31,15 @@ import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    LottieAnimationView confetti;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+
+        confetti = findViewById(R.id.confetti);
 
         MessagesListAdapter<Message> adapter = MessagesAdapter.INSTANCE;
         MessagesList messagesList = findViewById(R.id.messagesList);
@@ -58,6 +64,37 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
         Menu menu = navigation.getMenu();
         MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
+
+        confetti.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                confetti.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        MessagesAdapter.INSTANCE.setConfettiListener(new MessagesAdapter.ConfettiListener() {
+            @Override
+            public void showConfetti() {
+                Toast.makeText(ChatActivity.this, "SHowing confetti", Toast.LENGTH_LONG).show();
+                confetti.playAnimation();
+                confetti.setVisibility(View.VISIBLE);
+            }
+        });
 
         MessagesAdapter.INSTANCE.setOptionsChangeListener(new MessagesAdapter.OptionsChangeListener() {
             @Override
