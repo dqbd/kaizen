@@ -106,15 +106,13 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
     public void addServerImage(Bitmap bitmap) {
         ensureStarted();
         String key = String.valueOf(System.currentTimeMillis());
-        Message msg = new Message(key, "",  server);
+        Message msg = new Message(key, "",  me);
         msg.setImageUrl(key, bitmap);
         Bitmap bm = Bitmap.createBitmap(bitmap);
         images.put(key, bm);
         this.addToStart(msg, true);
         sendToServer(msg);
     }
-
-
 
 
     private void sendToServer(Message msg) {

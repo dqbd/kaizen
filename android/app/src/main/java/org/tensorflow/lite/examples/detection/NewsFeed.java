@@ -34,7 +34,7 @@ private NewsFeedItemFragment mFragment;
 
         // Ensure correct menu item is selected (where the magic happens)
         Menu menu = navigation.getMenu();
-        MenuItem menuItem = menu.getItem(3);
+        MenuItem menuItem = menu.getItem(2);
         menuItem.setChecked(true);
     }
 
