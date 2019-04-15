@@ -39,6 +39,8 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
     private WebSocketListener websock = new MyWebSocketListener();
 
+    private Map<String, String> lastOptions = new HashMap<>();
+
     public static MessagesAdapter INSTANCE = new MessagesAdapter(me.getId(), new ImageLoader() {
 
         @Override
@@ -48,6 +50,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         }
     });
     private WebSocket ws;
+    private OptionsChangeListener optionsChangeListener;
 
     public MessagesAdapter(String senderId, ImageLoader imageLoader) {
         super(senderId, imageLoader);
@@ -93,6 +96,25 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         }
     }
 
+    private void sendToServerQuick(String quickMsg) {
+
+        try {
+
+            JSONObject req = new JSONObject();
+            req.put("type", "quickresponse");
+            req.put("value", quickMsg);
+            req.put("user", me.getId());
+            req.put("channel","socket");
+
+            Log.i("WS", "sending " + req.toString());
+
+            ws.send(req.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendToServer(Message msg) {
         sendToServer(msg, null);
@@ -118,6 +140,22 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         });
     }
 
+    public void setOptionsChangeListener(OptionsChangeListener optionsChangeListener) {
+        this.optionsChangeListener = optionsChangeListener;
+    }
+
+    public void addUserQuickMessage(String value) {
+        ensureStarted();
+        String key = String.valueOf(System.currentTimeMillis());
+        Message msg = new Message(key, value,  me);
+        addToStart(msg, true);
+        sendToServerQuick(value);
+        lastOptions.clear();
+        if (optionsChangeListener != null) {
+            optionsChangeListener.changed(lastOptions);
+        }
+    }
+
 
     private final class MyWebSocketListener extends WebSocketListener {
         @Override
@@ -139,11 +177,23 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
                 JSONArray array = res.optJSONArray("generic");
 
+                lastOptions.clear();
                 if (array != null) {
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject obj = (JSONObject) array.get(i);
-                        String t = obj.getString("text");
-                        addText(server, t);
+                        if (obj.has("title")) {
+                            String t = obj.getString("title");
+                            addText(server, t);
+                            JSONArray options = obj.getJSONArray("options");
+                            for (int j = 0; j < options.length(); j ++) {
+                                JSONObject option = (JSONObject) options.get(j);
+                                String value = option.getJSONObject("value").getJSONObject("input").getString("text");
+                                lastOptions.put(value, value);
+                            }
+                        } else {
+                            String t = obj.getString("text");
+                            addText(server, t);
+                        }
                     }
                 } else {
                     String r = res.optString("text");
@@ -151,6 +201,10 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
                         addText(server, r);
                     }
                 }
+                if (optionsChangeListener != null) {
+                    optionsChangeListener.changed(lastOptions);
+                }
+
 
             } catch (JSONException|ClassCastException e) {
 
@@ -181,6 +235,12 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         ws = client.newWebSocket(request, websock);
         ws.send("test2");
         // client.dispatcher().executorService().shutdown();
+
+    }
+
+    public interface OptionsChangeListener {
+
+        void changed(Map<String, String> options);
 
     }
 

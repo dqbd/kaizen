@@ -47,6 +47,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <ScrollView
+        android:id="@+id/btns_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/messagesList"
+        app:layout_constraintBottom_toTopOf="@id/navigation">
+        <LinearLayout
+            android:id="@+id/btns"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+    </ScrollView>
+
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/input"
         android:layout_width="0dp"

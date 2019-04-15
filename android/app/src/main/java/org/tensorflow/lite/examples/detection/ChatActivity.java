@@ -13,12 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+
+import java.util.Map;
 
 
 public class ChatActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -53,6 +58,37 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
         Menu menu = navigation.getMenu();
         MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
+
+        MessagesAdapter.INSTANCE.setOptionsChangeListener(new MessagesAdapter.OptionsChangeListener() {
+            @Override
+            public void changed(Map<String, String> options) {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        LinearLayout btns = findViewById(R.id.btns);
+                        btns.removeAllViews();
+
+                        int count = 0;
+                        for (Map.Entry<String, String> e: options.entrySet()) {
+                            Button btn = new Button(btns.getContext());
+                            btn.setText(e.getValue());
+                            btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    MessagesAdapter.INSTANCE.addUserQuickMessage(e.getKey());
+                                }
+                            });
+                            btns.addView(btn);
+                            count++;
+                        }
+                        btns.setVisibility(count > 0 ? View.VISIBLE : View.INVISIBLE);
+                        findViewById(R.id.input).setVisibility(count > 0 ? View.INVISIBLE : View.VISIBLE);
+                    }
+                });
+            }
+        });
     }
 
     @Override
