@@ -139,7 +139,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
             @Override
             public void run() {
                 addToStart(new Message(text, text, author), true);
-                if (confettiListener != null && text != null && text.toLowerCase().contains("nadpozemské")) {
+                if (confettiListener != null && text != null && (text.toLowerCase().contains("nadpozemské") || text.toLowerCase().contains("solidní")) ) {
                     confettiListener.showConfetti();
                 }
             }
