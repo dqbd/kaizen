@@ -88,6 +88,12 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        MessagesAdapter.INSTANCE.killSocket();
+    }
+
+    @Override
     public void changed(Map<String, String> options) {
 
         runOnUiThread(new Runnable() {

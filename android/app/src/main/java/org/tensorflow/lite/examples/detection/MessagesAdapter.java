@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -145,7 +146,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         this.optionsChangeListener = optionsChangeListener;
     }
 
-    public void addUserQuickMessage(String value) {
+    public synchronized void addUserQuickMessage(String value) {
         ensureStarted();
         String key = String.valueOf(System.currentTimeMillis());
         Message msg = new Message(key, lastOptions.get(value),  me);
@@ -153,8 +154,13 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         sendToServerQuick(value);
         lastOptions.clear();
         if (optionsChangeListener != null) {
-            optionsChangeListener.changed(lastOptions);
+            optionsChangeListener.changed(new HashMap<>(lastOptions));
         }
+    }
+
+    public void killSocket() {
+        ws.close(1000, null);
+        ws = null;
     }
 
 
@@ -164,7 +170,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
             Log.i("WS", "On open");
         }
         @Override
-        public void onMessage(WebSocket webSocket, String text) {
+        public synchronized void onMessage(WebSocket webSocket, String text) {
 
             Log.i("WS", "On Message: " + text);
 
@@ -203,7 +209,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
                     }
                 }
                 if (optionsChangeListener != null) {
-                    optionsChangeListener.changed(lastOptions);
+                    optionsChangeListener.changed(new HashMap<>(lastOptions));
                 }
 
 
