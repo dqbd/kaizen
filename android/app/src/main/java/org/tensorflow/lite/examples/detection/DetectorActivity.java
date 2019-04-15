@@ -121,9 +121,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           public void run() {
             setNumThreads(1);
           }
-        }, 100);
+        }, 1000);
       }
-    }, 100);
+    }, 1000);
   }
 
   @Override
@@ -302,6 +302,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         startActivity(new Intent(this, MapActivity.class));
         break;
       }
+      case R.id.newsfeed:
+        startActivity(new Intent(this, NewsFeed.class));
     }
     overridePendingTransition(0, 0);
     return true;

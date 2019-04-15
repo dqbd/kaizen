@@ -19,4 +19,10 @@
         android:icon="@drawable/ic_person_outline_black_24dp"
         android:title="Profil"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/newsfeed"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_black_24dp"
+        android:title="Newsfeed"
+        app:showAsAction="ifRoom" />
 </menu>
