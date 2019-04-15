@@ -16,21 +16,30 @@
             android:layout_height="50dp"
             android:src="@drawable/avatar"
         />
+
         <TextView
             android:id="@+id/user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="28sp"
             android:layout_weight="1"
-            android:text="Uživatel 1." />
+            android:fontFamily="@font/oxygen"
+            android:text="Uživatel 1."
+            android:textSize="20sp" />
 
         <TextView
             android:text="325"
             android:id="@+id/user_score"
-            android:textSize="28sp"
+            android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/colorAccent"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/ic_leaf"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
