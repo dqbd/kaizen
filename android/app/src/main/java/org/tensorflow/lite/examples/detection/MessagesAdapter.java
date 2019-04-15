@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,15 +31,15 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
     private final Map<String, Bitmap> images = new HashMap<>();
 
-    private Author me = new Author("me", "Me");
-    private Author server = new Author("kaizen", "Kaizen");
+    private static Author me = new Author(UUID.randomUUID().toString(), "Me");
+    private static Author server = new Author(UUID.randomUUID().toString(), "Kaizen");
 
 
     private OkHttpClient client = new OkHttpClient();
 
     private WebSocketListener websock = new MyWebSocketListener();
 
-    public static MessagesAdapter INSTANCE = new MessagesAdapter("me", new ImageLoader() {
+    public static MessagesAdapter INSTANCE = new MessagesAdapter(me.getId(), new ImageLoader() {
 
         @Override
         public void loadImage(ImageView imageView, @Nullable String url, @Nullable Object payload) {
@@ -63,41 +64,24 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         }
     }
 
-    public void addServerImage(Bitmap bitmap) {
+    public void addServerImage(Bitmap bitmap, String label) {
         ensureStarted();
         String key = String.valueOf(System.currentTimeMillis());
-        Message msg = new Message(key, "",  server);
+        Message msg = new Message(key, "",  me);
         msg.setImageUrl(key, bitmap);
         Bitmap bm = Bitmap.createBitmap(bitmap);
         images.put(key, bm);
         this.addToStart(msg, true);
-        sendToServer(msg);
+        sendToServer(msg, label);
     }
 
+    private void sendToServer(Message msg, String label) {
 
-    public void addUserMessage(String text) {
-        ensureStarted();
-        String key = String.valueOf(System.currentTimeMillis());
-        Message msg = new Message(key, text,  me);
-        this.addToStart(msg, true);
-        sendToServer(msg);
-    }
-
-
-
-    private void sendToServer(Message msg) {
         try {
 
             JSONObject req = new JSONObject();
-            if (msg.getImage() != null) {
-
-                req.put("type", "image");
-                req.put("data", "nothing yet");
-            } else {
-
-                req.put("type", "message");
-                req.put("text", msg.getText());
-            }
+            req.put("type", "message");
+            req.put("text", label != null ? label : msg.getText());
             req.put("user", msg.getUser().getId());
 
             Log.i("WS", "sending " + req.toString());
@@ -108,6 +92,21 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
             e.printStackTrace();
         }
     }
+
+
+    private void sendToServer(Message msg) {
+        sendToServer(msg, null);
+    }
+
+    public void addUserMessage(String text) {
+        ensureStarted();
+        String key = String.valueOf(System.currentTimeMillis());
+        Message msg = new Message(key, text,  me);
+        this.addToStart(msg, true);
+        sendToServer(msg);
+    }
+
+
 
     private void addText(Author author, String text)
     {
@@ -137,10 +136,6 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
                     return;
                 }
 
-                String r = res.optString("text");
-                if (r != null) {
-                    addText(server, r);
-                }
 
                 JSONArray array = res.optJSONArray("generic");
 
@@ -149,6 +144,11 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
                         JSONObject obj = (JSONObject) array.get(i);
                         String t = obj.getString("text");
                         addText(server, t);
+                    }
+                } else {
+                    String r = res.optString("text");
+                    if (r != null) {
+                        addText(server, r);
                     }
                 }
 

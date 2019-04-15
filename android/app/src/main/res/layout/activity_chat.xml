@@ -27,15 +27,6 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="112dp"
-        tools:layout_editor_absoluteY="270dp" />
-
-
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"

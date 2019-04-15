@@ -37,15 +37,8 @@ public class ChatActivity extends AppCompatActivity {
         input.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(CharSequence input) {
-                adapter.addToStart(new Message(input.toString(), input.toString(), me), true);
+                MessagesAdapter.INSTANCE.addUserMessage(input.toString());
                 return true;
-            }
-        });
-
-        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MessagesAdapter.INSTANCE.addUserMessage("AAAAA");
             }
         });
 
