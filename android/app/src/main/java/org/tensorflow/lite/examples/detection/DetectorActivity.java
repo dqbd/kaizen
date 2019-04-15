@@ -16,6 +16,7 @@
 
 package org.tensorflow.lite.examples.detection;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -29,8 +30,12 @@ import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.util.Size;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -48,7 +53,7 @@ import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
  * objects.
  */
-public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
+public class DetectorActivity extends CameraActivity implements OnImageAvailableListener, BottomNavigationView.OnNavigationItemSelectedListener {
   private static final Logger LOGGER = new Logger();
 
   // Configuration values for the prepackaged SSD model.
@@ -60,7 +65,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   // Minimum detection confidence to track a detection.
   private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.5f;
   private static final boolean MAINTAIN_ASPECT = false;
-  private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+  private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 1280);
   private static final boolean SAVE_PREVIEW_BITMAP = false;
   private static final float TEXT_SIZE_DIP = 10;
   OverlayView trackingOverlay;
@@ -92,6 +97,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     testHandler = new Handler();
+
+    BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+    navigation.setOnNavigationItemSelectedListener(this);
+
+    // Ensure correct menu item is selected (where the magic happens)
+    Menu menu = navigation.getMenu();
+    MenuItem menuItem = menu.getItem(0);
+    menuItem.setChecked(true);
   }
 
   @Override
@@ -277,6 +290,21 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   @Override
   protected Size getDesiredPreviewFrameSize() {
     return DESIRED_PREVIEW_SIZE;
+  }
+
+  @Override
+  public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+    switch (menuItem.getItemId()) {
+      case R.id.action_record: {
+        break;
+      }
+      case R.id.action_stats: {
+        startActivity(new Intent(this, MapActivity.class));
+        break;
+      }
+    }
+    overridePendingTransition(0, 0);
+    return true;
   }
 
   // Which detection model to use: by default uses Tensorflow Object Detection API frozen
