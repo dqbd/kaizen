@@ -13,11 +13,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
+        app:itemBackground="@color/colorNavigation"
+        app:itemIconTint="@drawable/selector_menu"
+        app:itemTextColor="@drawable/selector_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/navigation"
+        />
 
     <fragment
         android:id="@+id/newsfeed_fragment"

@@ -314,14 +314,17 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
     switch (menuItem.getItemId()) {
       case R.id.action_record: {
+        startActivity(new Intent(this, DetectorActivity.class));
         break;
       }
       case R.id.action_stats: {
         startActivity(new Intent(this, MapActivity.class));
         break;
       }
-      case R.id.newsfeed:
+      case R.id.newsfeed: {
         startActivity(new Intent(this, NewsFeed.class));
+        break;
+      }
     }
     overridePendingTransition(0, 0);
     return true;

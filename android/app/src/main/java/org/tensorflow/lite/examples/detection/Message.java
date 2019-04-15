@@ -86,6 +86,8 @@ class Author implements IUser
 
     @Override
     public String getAvatar() {
-        return "?";
+        return null;
     }
+
+
 }

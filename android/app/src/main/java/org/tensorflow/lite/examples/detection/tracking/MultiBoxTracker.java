@@ -18,12 +18,14 @@ package org.tensorflow.lite.examples.detection.tracking;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.support.v4.graphics.ColorUtils;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -54,27 +56,17 @@ public class MultiBoxTracker {
   // Consider object to be lost if correlation falls below this threshold.
   private static final float MIN_CORRELATION = 0.3f;
   private static final int[] COLORS = {
-    Color.BLUE,
-    Color.RED,
-    Color.GREEN,
-    Color.YELLOW,
-    Color.CYAN,
-    Color.MAGENTA,
-    Color.WHITE,
-    Color.parseColor("#55FF55"),
-    Color.parseColor("#FFA500"),
-    Color.parseColor("#FF8888"),
-    Color.parseColor("#AAAAFF"),
-    Color.parseColor("#FFFFAA"),
-    Color.parseColor("#55AAAA"),
-    Color.parseColor("#AA33AA"),
-    Color.parseColor("#0D0068")
+    Color.parseColor("#3ABCA8"),
+    Color.parseColor("#65C6B8"),
+    Color.parseColor("#D0EBE5"),
   };
   final List<Pair<Float, RectF>> screenRects = new LinkedList<Pair<Float, RectF>>();
   private final Logger logger = new Logger();
   private final Queue<Integer> availableColors = new LinkedList<Integer>();
   private final List<TrackedRecognition> trackedObjects = new LinkedList<TrackedRecognition>();
   private final Paint boxPaint = new Paint();
+  private final Paint boxFillPaint = new Paint();
+
   private final float textSizePx;
   private final BorderedText borderedText;
   public ObjectTracker objectTracker;
@@ -83,6 +75,8 @@ public class MultiBoxTracker {
   private int frameHeight;
   private int sensorOrientation;
   private Context context;
+
+
   private boolean initialized = false;
 
   public MultiBoxTracker(final Context context) {
@@ -91,8 +85,13 @@ public class MultiBoxTracker {
       availableColors.add(color);
     }
 
+    boxFillPaint.setStyle(Style.FILL);
+
     boxPaint.setColor(Color.RED);
     boxPaint.setStyle(Style.STROKE);
+    boxPaint.setTextAlign(Paint.Align.CENTER);
+
+    boxPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
     boxPaint.setStrokeWidth(10.0f);
     boxPaint.setStrokeCap(Cap.ROUND);
     boxPaint.setStrokeJoin(Join.ROUND);
@@ -173,19 +172,20 @@ public class MultiBoxTracker {
 
       getFrameToCanvasMatrix().mapRect(trackedPos);
       boxPaint.setColor(recognition.color);
+      boxFillPaint.setColor(ColorUtils.setAlphaComponent(recognition.color, 50));
 
-      float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
-      cornerSize = 1.0f;
+      float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 16.f;
       canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
-//
-//      final String labelString =
-//          !TextUtils.isEmpty(recognition.title)
-//              ? String.format("%s %.2f", recognition.title, (100 * recognition.detectionConfidence))
-//              : String.format("%.2f", (100 * recognition.detectionConfidence));
-//      //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.top,
-//      // labelString);
-//      borderedText.drawText(
-//          canvas, trackedPos.left + cornerSize, trackedPos.top, labelString + "%", boxPaint);
+      canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxFillPaint);
+
+      if (!TextUtils.isEmpty(recognition.title)) {
+        String labelString = String.format("%s", recognition.title);
+        float xPos = trackedPos.left + cornerSize;
+        float yPos = trackedPos.top + cornerSize;
+
+        borderedText.drawText(canvas, xPos, yPos, labelString, boxPaint);
+      }
+
     }
   }
 
