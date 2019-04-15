@@ -29,7 +29,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.util.Map;
 
 
-public class ChatActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class ChatActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MessagesAdapter.OptionsChangeListener, MessagesAdapter.ConfettiListener {
 
     LottieAnimationView confetti;
     @Override
@@ -64,68 +64,14 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
         Menu menu = navigation.getMenu();
         MenuItem menuItem = menu.getItem(1);
         menuItem.setChecked(true);
+        MessagesAdapter.INSTANCE.setOptionsChangeListener(this);
+    }
 
-        confetti.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                confetti.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
-        MessagesAdapter.INSTANCE.setConfettiListener(new MessagesAdapter.ConfettiListener() {
-            @Override
-            public void showConfetti() {
-                Toast.makeText(ChatActivity.this, "SHowing confetti", Toast.LENGTH_LONG).show();
-                confetti.playAnimation();
-                confetti.setVisibility(View.VISIBLE);
-            }
-        });
-
-        MessagesAdapter.INSTANCE.setOptionsChangeListener(new MessagesAdapter.OptionsChangeListener() {
-            @Override
-            public void changed(Map<String, String> options) {
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        LinearLayout btns = findViewById(R.id.btns);
-                        btns.removeAllViews();
-
-                        int count = 0;
-                        for (Map.Entry<String, String> e: options.entrySet()) {
-                            Button btn = new Button(btns.getContext());
-                            btn.setText(e.getValue());
-                            btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    MessagesAdapter.INSTANCE.addUserQuickMessage(e.getKey());
-                                }
-                            });
-                            btns.addView(btn);
-                            count++;
-                        }
-                        btns.setVisibility(count > 0 ? View.VISIBLE : View.INVISIBLE);
-                        findViewById(R.id.input).setVisibility(count > 0 ? View.INVISIBLE : View.VISIBLE);
-                    }
-                });
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MessagesAdapter.INSTANCE.setOptionsChangeListener(this);
+        MessagesAdapter.INSTANCE.setConfettiListener(this);
     }
 
     @Override
@@ -146,5 +92,45 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
         }
         overridePendingTransition(0, 0);
         return true;
+    }
+
+    @Override
+    public void changed(Map<String, String> options) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                LinearLayout btns = findViewById(R.id.btns);
+                btns.removeAllViews();
+
+                int count = 0;
+                for (Map.Entry<String, String> e: options.entrySet()) {
+                    Button btn = new Button(btns.getContext());
+                    btn.setText(e.getValue());
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MessagesAdapter.INSTANCE.addUserQuickMessage(e.getKey());
+                        }
+                    });
+                    btns.addView(btn);
+                    count++;
+                }
+                btns.setVisibility(count > 0 ? View.VISIBLE : View.INVISIBLE);
+                findViewById(R.id.input).setVisibility(count > 0 ? View.INVISIBLE : View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void showConfetti() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                confetti.playAnimation();
+                confetti.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }

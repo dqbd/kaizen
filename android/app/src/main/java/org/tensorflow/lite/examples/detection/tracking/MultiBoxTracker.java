@@ -31,6 +31,7 @@ import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -178,8 +179,22 @@ public class MultiBoxTracker {
       canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
       canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxFillPaint);
 
-      if (!TextUtils.isEmpty(recognition.title)) {
-        String labelString = String.format("%s", recognition.title);
+
+      String title = recognition.title;
+      if ("bottle".equals(title)) {
+        title = "Láhev";
+      } else if ("bicycle".equals(title)) {
+        title = "Kolo";
+      } else if ("person".equals(title)) {
+        title = "Osoba";
+      } else {
+        title = null;
+      }
+
+      if (!TextUtils.isEmpty(title)) {
+
+
+        String labelString = String.format("%s", title);
         float xPos = trackedPos.left + cornerSize;
         float yPos = trackedPos.top + cornerSize;
 
@@ -274,6 +289,15 @@ public class MultiBoxTracker {
     if (objectTracker == null) {
       trackedObjects.clear();
       for (final Pair<Float, Recognition> potential : rectsToTrack) {
+
+        String title = potential.second.getTitle();
+//        if ("bottle".equals(title)) {
+//        } else if ("bicycle".equals(title)) {
+//        } else if ("person".equals(title)) {
+//        } else {
+//          break;
+//        }
+
         final TrackedRecognition trackedRecognition = new TrackedRecognition();
         trackedRecognition.detectionConfidence = potential.first;
         trackedRecognition.location = new RectF(potential.second.getLocation());

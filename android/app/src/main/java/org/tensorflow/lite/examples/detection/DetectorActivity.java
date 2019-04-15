@@ -197,6 +197,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         MultiBoxTracker.TrackedRecognition biggest = null;
         for (MultiBoxTracker.TrackedRecognition recognition: tracker.getTrackedObjects()) {
           if (biggest == null || recognition.location.width() * recognition.location.height() > biggest.location.width() * biggest.location.height()) {
+            if (recognition.title == null) {
+              break;
+            }
             biggest = recognition;
           }
         }
