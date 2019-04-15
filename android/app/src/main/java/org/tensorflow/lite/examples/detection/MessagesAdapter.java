@@ -53,6 +53,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
     });
     private WebSocket ws;
     private OptionsChangeListener optionsChangeListener;
+    private ConfettiListener confettiListener;
 
     public MessagesAdapter(String senderId, ImageLoader imageLoader) {
         super(senderId, imageLoader);
@@ -138,12 +139,19 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
             @Override
             public void run() {
                 addToStart(new Message(text, text, author), true);
+                if (confettiListener != null && text != null && text.toLowerCase().contains("nadpozemské")) {
+                    confettiListener.showConfetti();
+                }
             }
         });
     }
 
     public void setOptionsChangeListener(OptionsChangeListener optionsChangeListener) {
         this.optionsChangeListener = optionsChangeListener;
+    }
+
+    public void setConfettiListener(ConfettiListener listener) {
+        this.confettiListener = listener;
     }
 
     public synchronized void addUserQuickMessage(String value) {
@@ -180,7 +188,6 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
                 if ("typing".equals(res.optString("type"))) {
                     return;
                 }
-
 
                 JSONArray array = res.optJSONArray("generic");
 
@@ -249,6 +256,10 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
         void changed(Map<String, String> options);
 
+    }
+
+    public interface ConfettiListener {
+        void showConfetti();
     }
 
 }

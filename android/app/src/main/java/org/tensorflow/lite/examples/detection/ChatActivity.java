@@ -1,5 +1,6 @@
 package org.tensorflow.lite.examples.detection;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -26,14 +29,17 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.util.Map;
 
 
-public class ChatActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MessagesAdapter.OptionsChangeListener {
+public class ChatActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MessagesAdapter.OptionsChangeListener, MessagesAdapter.ConfettiListener {
 
+    LottieAnimationView confetti;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+
+        confetti = findViewById(R.id.confetti);
 
         MessagesListAdapter<Message> adapter = MessagesAdapter.INSTANCE;
         MessagesList messagesList = findViewById(R.id.messagesList);
@@ -56,7 +62,7 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
 
         // Ensure correct menu item is selected (where the magic happens)
         Menu menu = navigation.getMenu();
-        MenuItem menuItem = menu.getItem(1);
+        MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
         MessagesAdapter.INSTANCE.setOptionsChangeListener(this);
     }
@@ -65,6 +71,7 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
     protected void onResume() {
         super.onResume();
         MessagesAdapter.INSTANCE.setOptionsChangeListener(this);
+        MessagesAdapter.INSTANCE.setConfettiListener(this);
     }
 
     @Override
@@ -118,6 +125,17 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
                 }
                 btns.setVisibility(count > 0 ? View.VISIBLE : View.INVISIBLE);
                 findViewById(R.id.input).setVisibility(count > 0 ? View.INVISIBLE : View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void showConfetti() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                confetti.playAnimation();
+                confetti.setVisibility(View.VISIBLE);
             }
         });
     }
