@@ -39,6 +39,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
     private WebSocketListener websock = new MyWebSocketListener();
 
+    // label -> value
     private Map<String, String> lastOptions = new HashMap<>();
 
     public static MessagesAdapter INSTANCE = new MessagesAdapter(me.getId(), new ImageLoader() {
@@ -147,7 +148,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
     public void addUserQuickMessage(String value) {
         ensureStarted();
         String key = String.valueOf(System.currentTimeMillis());
-        Message msg = new Message(key, value,  me);
+        Message msg = new Message(key, lastOptions.get(value),  me);
         addToStart(msg, true);
         sendToServerQuick(value);
         lastOptions.clear();
@@ -183,12 +184,12 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
                         JSONObject obj = (JSONObject) array.get(i);
                         if (obj.has("title")) {
                             String t = obj.getString("title");
-                            addText(server, t);
+//                            addText(server, t);
                             JSONArray options = obj.getJSONArray("options");
                             for (int j = 0; j < options.length(); j ++) {
                                 JSONObject option = (JSONObject) options.get(j);
                                 String value = option.getJSONObject("value").getJSONObject("input").getString("text");
-                                lastOptions.put(value, value);
+                                lastOptions.put(value, option.getString("label"));
                             }
                         } else {
                             String t = obj.getString("text");
