@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,12 +25,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapActivity extends Activity implements BottomNavigationView.OnNavigationItemSelectedListener {
     RecyclerView wrapList;
-    ArrayList<User> dataset = new ArrayList<>();
 
     UserAdapter adapter;
 
-    static final int MAX_SCORE = 200;
-    static final int MAX_SECTION = MAX_SCORE / 4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +37,9 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
 
         wrapList = findViewById(R.id.map_list);
 
-        dataset.add(new User("Ladislav Vagner", 0, getDrawable(R.drawable.avatar)));
-        dataset.add(new User("Jana Šetrná", MAX_SECTION + 2, getDrawable(R.drawable.avatar2)));
-        dataset.add(new User("Petr Přírodní", MAX_SECTION * 2 + 2, getDrawable(R.drawable.avatar3)));
-        dataset.add(new User("Petr Přírodní", MAX_SECTION * 3 + 2, getDrawable(R.drawable.avatar3)));
 
 
-        adapter = new UserAdapter(dataset);
+        adapter = new UserAdapter(((MainApplication) getApplication()).USER_MAP_DATASET);
 
         wrapList.setLayoutManager(new LinearLayoutManager(this));
         wrapList.setAdapter(adapter);
@@ -91,18 +82,6 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
-    class User {
-        String username;
-        Integer score;
-        Drawable avatar;
-
-        public User(String username, Integer score, Drawable avatar) {
-            this.username = username;
-            this.score = score;
-            this.avatar = avatar;
-        }
-    }
-
 
     class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ArrayList<User> users;
@@ -122,17 +101,17 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
             }
 
             void addUserToMap(User user) {
-                if (user.score <= MAX_SECTION) {
+                if (user.score <= MainApplication.MAX_SECTION) {
                     addImage(user.avatar, 50, 140);
-                } else if (user.score > MAX_SECTION && user.score <= MAX_SECTION * 2) {
-                    if (user.score <= MAX_SECTION * 1.5) {
+                } else if (user.score > MainApplication.MAX_SECTION && user.score <= MainApplication.MAX_SECTION * 2) {
+                    if (user.score <= MainApplication.MAX_SECTION * 1.5) {
                         addImage(user.avatar, 98, 230);
                     } else {
                         addImage(user.avatar, 130, 293);
                     }
-                } else if (user.score > MAX_SECTION * 2 && user.score <= MAX_SECTION * 3) {
+                } else if (user.score > MainApplication.MAX_SECTION * 2 && user.score <= MainApplication.MAX_SECTION * 3) {
                     addImage(user.avatar, 220, 165);
-                } else if (user.score > MAX_SECTION * 3) {
+                } else if (user.score > MainApplication.MAX_SECTION * 3) {
                     addImage(user.avatar, 255, 220);
                 }
             }
