@@ -190,11 +190,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           }
         });
 
-    trackingOverlay.setOnTouchListener(new View.OnTouchListener() {
+    trackingOverlay.setOnClickListener(new View.OnClickListener() {
       @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        MessagesAdapter.INSTANCE.addServerImage(rgbFrameBitmap);
-        return true;
+      public void onClick(View v) {
+        MessagesAdapter.INSTANCE.addServerImage(croppedBitmap);
+        startActivity(new Intent(DetectorActivity.this, ChatActivity.class));
       }
     });
   }

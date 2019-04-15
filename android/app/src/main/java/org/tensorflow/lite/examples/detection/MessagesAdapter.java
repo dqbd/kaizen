@@ -37,10 +37,11 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
 
     public void addServerImage(Bitmap bitmap) {
-        String key = String.valueOf(bitmap.hashCode());
+        String key = String.valueOf(System.currentTimeMillis());
         Message msg = new Message(key, "",  server);
         msg.setImageUrl(key);
-        images.put(key, bitmap);
+        Bitmap bm = Bitmap.createBitmap(bitmap);
+        images.put(key, bm);
         this.addToStart(msg, true);
     }
 }

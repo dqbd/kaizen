@@ -36,22 +36,11 @@ public class ChatActivity extends AppCompatActivity {
         input.setInputListener(new MessageInput.InputListener() {
             @Override
             public boolean onSubmit(CharSequence input) {
-
                 adapter.addToStart(new Message(input.toString(), input.toString(), me), true);
                 return true;
             }
         });
 
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                runOnUiThread(() -> adapter.addToStart(new Message("a", "eej", server), true));
-            }
-        }).start();
 
     }
 
