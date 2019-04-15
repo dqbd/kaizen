@@ -45,7 +45,7 @@
             android:name="com.google.ar.core"
             android:value="optional" />
 
-        <activity android:name=".Splash">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

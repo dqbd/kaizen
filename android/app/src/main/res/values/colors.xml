@@ -2,12 +2,10 @@
 <resources>
     <color name="colorPrimary">#98999b</color>
     <color name="colorPrimaryDark">#404041</color>
-    <color name="colorAccent">#76FF03</color>
-
-
+    <color name="colorAccent">#3ABCA8</color>
 
     <color name="colorNavigation">#fff</color>
-    <color name="colorNavigationActive">#FFC107</color>
+    <color name="colorNavigationActive">#3ABCA8</color>
     <color name="colorNavigationInactive">#263238</color>
     <color name="colorText">#37474F</color>
 

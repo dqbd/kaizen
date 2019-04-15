@@ -5,13 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-public class Splash extends Activity {
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,7 +19,7 @@ public class Splash extends Activity {
 
         Button login = findViewById(R.id.login);
 
-        login.setOnClickListener(v -> startActivity(new Intent(Splash.this, DetectorActivity.class)));
+        login.setOnClickListener(v -> startActivity(new Intent(SplashActivity.this, DetectorActivity.class)));
         login.setAlpha(0);
         login.setEnabled(false);
 
@@ -33,7 +32,6 @@ public class Splash extends Activity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                Toast.makeText(Splash.this, "Ended", Toast.LENGTH_LONG).show();
                 login.setAlpha(1);
                 login.setEnabled(true);
             }
