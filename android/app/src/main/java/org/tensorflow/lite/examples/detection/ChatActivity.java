@@ -42,6 +42,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessagesAdapter.INSTANCE.addUserMessage("AAAAA");
+            }
+        });
+
 
     }
 
