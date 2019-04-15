@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -46,8 +47,10 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
         dataset.add(new User("Petr Přírodní", MAX_SECTION * 2 + 2, getDrawable(R.drawable.avatar3)));
         dataset.add(new User("Petr Přírodní", MAX_SECTION * 3 + 2, getDrawable(R.drawable.avatar3)));
 
+
         adapter = new UserAdapter(dataset);
 
+        wrapList.setLayoutManager(new LinearLayoutManager(this));
         wrapList.setAdapter(adapter);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
@@ -66,6 +69,11 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
                 break;
             }
             case R.id.action_stats: {
+                startActivity(new Intent(this, MapActivity.class));
+                break;
+            }
+            case R.id.newsfeed: {
+                startActivity(new Intent(this, NewsFeed.class));
                 break;
             }
         }
@@ -105,9 +113,12 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
 
         class MapViewHolder extends RecyclerView.ViewHolder {
             RelativeLayout map;
+            Context context;
             public MapViewHolder(@NonNull View itemView) {
                 super(itemView);
-                itemView.findViewById(R.id.map);
+
+                context = itemView.getContext();
+                map = itemView.findViewById(R.id.relative_map);
             }
 
             void addUserToMap(User user) {
@@ -127,11 +138,11 @@ public class MapActivity extends Activity implements BottomNavigationView.OnNavi
             }
 
             void addImage(Drawable drawable, int top, int left) {
-                CircleImageView testImage = new CircleImageView(map.getContext());
+                CircleImageView testImage = new CircleImageView(context);
 
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Math.round(convertDpToPixel(30, map.getContext())), Math.round(convertDpToPixel(30, map.getContext())));
-                params.leftMargin = (int) convertDpToPixel(left, map.getContext());
-                params.topMargin = (int) convertDpToPixel(top, map.getContext());
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Math.round(convertDpToPixel(30, context)), Math.round(convertDpToPixel(30, context)));
+                params.leftMargin = (int) convertDpToPixel(left, context);
+                params.topMargin = (int) convertDpToPixel(top, context);
 
                 testImage.setImageDrawable(drawable);
                 map.addView(testImage, params);
