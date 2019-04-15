@@ -15,6 +15,7 @@ import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+
 public class ChatActivity extends AppCompatActivity {
 
     @Override
