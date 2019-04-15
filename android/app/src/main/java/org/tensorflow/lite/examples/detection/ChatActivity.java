@@ -62,7 +62,7 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
 
         // Ensure correct menu item is selected (where the magic happens)
         Menu menu = navigation.getMenu();
-        MenuItem menuItem = menu.getItem(1);
+        MenuItem menuItem = menu.getItem(0);
         menuItem.setChecked(true);
         MessagesAdapter.INSTANCE.setOptionsChangeListener(this);
     }
