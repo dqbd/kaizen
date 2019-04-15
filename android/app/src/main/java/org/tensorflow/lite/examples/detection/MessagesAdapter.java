@@ -38,11 +38,48 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
     private OkHttpClient client = new OkHttpClient();
 
+    private WebSocketListener websock = new WebSocketListener() {
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+            super.onOpen(webSocket, response);
+
+            webSocket.send("test");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            super.onMessage(webSocket, text);
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            super.onMessage(webSocket, bytes);
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            super.onClosing(webSocket, code, reason);
+        }
+
+        @Override
+        public void onClosed(WebSocket webSocket, int code, String reason) {
+            super.onClosed(webSocket, code, reason);
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            super.onFailure(webSocket, t, response);
+        }
+    };
+
     private Handler handler = new Handler();
 
     Thread thread;
 
     public static MessagesAdapter INSTANCE = new MessagesAdapter("me", new ImageLoader() {
+
+
+
         @Override
         public void loadImage(ImageView imageView, @Nullable String url, @Nullable Object payload) {
             Bitmap bitmap = INSTANCE.images.get(url);
@@ -160,10 +197,11 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
     }
 
     private void start() {
-        Request request = new Request.Builder().url("ws://unit2019.herokuapp.com").build();
-        EchoWebSocketListener listener = new EchoWebSocketListener();
-        ws = client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
+        Request request = new Request.Builder().url("wss://unit2019.herokuapp.com").build();;
+        ws = client.newWebSocket(request, websock);
+       ws.send("test2");
+        // client.dispatcher().executorService().shutdown();
+
     }
 
 }
