@@ -1,5 +1,6 @@
 package org.tensorflow.lite.examples.detection;
 
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
@@ -14,6 +15,7 @@ public class Message implements IMessage, MessageContentType.Image {
     private Author author;
     private Date date;
     private String imageUrl;
+    private Bitmap bitmap;
 
     public Message(String id, String text, Author author) {
         this.id = id;
@@ -50,8 +52,13 @@ public class Message implements IMessage, MessageContentType.Image {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(String imageUrl, Bitmap bitmap) {
         this.imageUrl = imageUrl;
+        this.bitmap = bitmap;
+    }
+
+    public Bitmap getImage() {
+        return bitmap;
     }
 }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TFLiteObjectDetection</string>
+    <string name="app_name">KAIZEN</string>
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
@@ -9,4 +9,8 @@
     <string name="map_path_two">path_two</string>
     <string name="map_path_three">path_three</string>
     <string name="map_path_four">path_four</string>
+    <string name="title_activity_news_feed">NewsFeed</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
