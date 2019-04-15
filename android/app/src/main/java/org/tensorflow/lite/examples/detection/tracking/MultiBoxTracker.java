@@ -30,6 +30,8 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -411,11 +413,16 @@ public class MultiBoxTracker {
     trackedObjects.add(trackedRecognition);
   }
 
-  private static class TrackedRecognition {
-    ObjectTracker.TrackedObject trackedObject;
-    RectF location;
-    float detectionConfidence;
-    int color;
-    String title;
+  public synchronized List<TrackedRecognition> getTrackedObjects()
+  {
+    return new ArrayList<>(this.trackedObjects);
+  }
+
+  public static class TrackedRecognition {
+    public ObjectTracker.TrackedObject trackedObject;
+    public RectF location;
+    public float detectionConfidence;
+    public int color;
+    public String title;
   }
 }

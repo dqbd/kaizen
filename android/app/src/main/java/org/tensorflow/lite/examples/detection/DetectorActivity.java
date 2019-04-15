@@ -193,7 +193,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     trackingOverlay.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        MessagesAdapter.INSTANCE.addServerImage(croppedBitmap);
+
+        MultiBoxTracker.TrackedRecognition biggest = null;
+        for (MultiBoxTracker.TrackedRecognition recognition: tracker.getTrackedObjects()) {
+          if (biggest == null || recognition.location.width() * recognition.location.height() > biggest.location.width() * biggest.location.height()) {
+            biggest = recognition;
+          }
+        }
+
+        MessagesAdapter.INSTANCE.addServerImage(croppedBitmap, biggest == null ? "" : biggest.title);
         startActivity(new Intent(DetectorActivity.this, ChatActivity.class));
       }
     });

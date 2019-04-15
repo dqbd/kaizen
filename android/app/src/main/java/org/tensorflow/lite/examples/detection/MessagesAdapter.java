@@ -17,8 +17,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
-import java.util.logging.SocketHandler;
+import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,53 +31,17 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
 
     private final Map<String, Bitmap> images = new HashMap<>();
 
-    private Author me = new Author("me", "Me");
-    private Author server = new Author("kaizen", "Kaizen");
+    private static Author me = new Author(UUID.randomUUID().toString(), "Me");
+    private static Author server = new Author(UUID.randomUUID().toString(), "Kaizen");
 
 
     private OkHttpClient client = new OkHttpClient();
 
-    private WebSocketListener websock = new WebSocketListener() {
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            super.onOpen(webSocket, response);
+    private WebSocketListener websock = new MyWebSocketListener();
 
-            webSocket.send("test");
-        }
+    private Map<String, String> lastOptions = new HashMap<>();
 
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            super.onMessage(webSocket, text);
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            super.onMessage(webSocket, bytes);
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            super.onClosing(webSocket, code, reason);
-        }
-
-        @Override
-        public void onClosed(WebSocket webSocket, int code, String reason) {
-            super.onClosed(webSocket, code, reason);
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            super.onFailure(webSocket, t, response);
-        }
-    };
-
-    private Handler handler = new Handler();
-
-    Thread thread;
-
-    public static MessagesAdapter INSTANCE = new MessagesAdapter("me", new ImageLoader() {
-
-
+    public static MessagesAdapter INSTANCE = new MessagesAdapter(me.getId(), new ImageLoader() {
 
         @Override
         public void loadImage(ImageView imageView, @Nullable String url, @Nullable Object payload) {
@@ -87,6 +50,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         }
     });
     private WebSocket ws;
+    private OptionsChangeListener optionsChangeListener;
 
     public MessagesAdapter(String senderId, ImageLoader imageLoader) {
         super(senderId, imageLoader);
@@ -103,7 +67,7 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         }
     }
 
-    public void addServerImage(Bitmap bitmap) {
+    public void addServerImage(Bitmap bitmap, String label) {
         ensureStarted();
         String key = String.valueOf(System.currentTimeMillis());
         Message msg = new Message(key, "",  me);
@@ -111,29 +75,40 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         Bitmap bm = Bitmap.createBitmap(bitmap);
         images.put(key, bm);
         this.addToStart(msg, true);
-        sendToServer(msg);
+        sendToServer(msg, label);
     }
 
+    private void sendToServer(Message msg, String label) {
 
-    private void sendToServer(Message msg) {
         try {
 
             JSONObject req = new JSONObject();
-            if (msg.getImage() != null) {
-
-                req.put("type", "image");
-                req.put("data", "nothing yet");
-            } else {
-
-                req.put("type", "message");
-                req.put("text", msg.getText());
-            }
+            req.put("type", "message");
+            req.put("text", label != null ? label : msg.getText());
             req.put("user", msg.getUser().getId());
 
             Log.i("WS", "sending " + req.toString());
 
             ws.send(req.toString());
-            ws.close(1000, "Goodbye !");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendToServerQuick(String quickMsg) {
+
+        try {
+
+            JSONObject req = new JSONObject();
+            req.put("type", "quickresponse");
+            req.put("value", quickMsg);
+            req.put("user", me.getId());
+            req.put("channel","socket");
+
+            Log.i("WS", "sending " + req.toString());
+
+            ws.send(req.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -141,8 +116,48 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
     }
 
 
-    private final class EchoWebSocketListener extends WebSocketListener {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
+    private void sendToServer(Message msg) {
+        sendToServer(msg, null);
+    }
+
+    public void addUserMessage(String text) {
+        ensureStarted();
+        String key = String.valueOf(System.currentTimeMillis());
+        Message msg = new Message(key, text,  me);
+        this.addToStart(msg, true);
+        sendToServer(msg);
+    }
+
+
+
+    private void addText(Author author, String text)
+    {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                addToStart(new Message(text, text, author), true);
+            }
+        });
+    }
+
+    public void setOptionsChangeListener(OptionsChangeListener optionsChangeListener) {
+        this.optionsChangeListener = optionsChangeListener;
+    }
+
+    public void addUserQuickMessage(String value) {
+        ensureStarted();
+        String key = String.valueOf(System.currentTimeMillis());
+        Message msg = new Message(key, value,  me);
+        addToStart(msg, true);
+        sendToServerQuick(value);
+        lastOptions.clear();
+        if (optionsChangeListener != null) {
+            optionsChangeListener.changed(lastOptions);
+        }
+    }
+
+
+    private final class MyWebSocketListener extends WebSocketListener {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             Log.i("WS", "On open");
@@ -150,18 +165,46 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
 
-            Log.i("WS", "On Message: " + text.substring(0, 30));
+            Log.i("WS", "On Message: " + text);
 
             try {
                 JSONObject res = new JSONObject(text);
 
-                JSONArray array = res.getJSONArray("generic");
-
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject obj = (JSONObject) array.get(i);
-                    String t = obj.getString("text");
-                    addToStart(new Message(t, t, server), true);
+                if ("typing".equals(res.optString("type"))) {
+                    return;
                 }
+
+
+                JSONArray array = res.optJSONArray("generic");
+
+                lastOptions.clear();
+                if (array != null) {
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = (JSONObject) array.get(i);
+                        if (obj.has("title")) {
+                            String t = obj.getString("title");
+                            addText(server, t);
+                            JSONArray options = obj.getJSONArray("options");
+                            for (int j = 0; j < options.length(); j ++) {
+                                JSONObject option = (JSONObject) options.get(j);
+                                String value = option.getJSONObject("value").getJSONObject("input").getString("text");
+                                lastOptions.put(value, value);
+                            }
+                        } else {
+                            String t = obj.getString("text");
+                            addText(server, t);
+                        }
+                    }
+                } else {
+                    String r = res.optString("text");
+                    if (r != null) {
+                        addText(server, r);
+                    }
+                }
+                if (optionsChangeListener != null) {
+                    optionsChangeListener.changed(lastOptions);
+                }
+
 
             } catch (JSONException|ClassCastException e) {
 
@@ -182,23 +225,22 @@ public class MessagesAdapter extends MessagesListAdapter<Message> {
         }
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            Log.i("WS", "On failure");
+            Log.i("WS", "On failure ");
             t.printStackTrace();
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    start();
-//                }
-//            }).start();
-//            start();
         }
     }
 
     private void start() {
         Request request = new Request.Builder().url("wss://unit2019.herokuapp.com").build();;
         ws = client.newWebSocket(request, websock);
-       ws.send("test2");
+        ws.send("test2");
         // client.dispatcher().executorService().shutdown();
+
+    }
+
+    public interface OptionsChangeListener {
+
+        void changed(Map<String, String> options);
 
     }
 
