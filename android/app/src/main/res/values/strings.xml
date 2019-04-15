@@ -3,6 +3,7 @@
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="title_activity_chat">ChatActivity</string>
 
     <string name="map_path_one">path_one</string>
     <string name="map_path_two">path_two</string>
