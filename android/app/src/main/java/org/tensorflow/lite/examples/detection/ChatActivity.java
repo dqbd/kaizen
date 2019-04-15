@@ -78,6 +78,10 @@ public class ChatActivity extends AppCompatActivity implements BottomNavigationV
                 startActivity(new Intent(this, MapActivity.class));
                 break;
             }
+            case R.id.newsfeed: {
+                startActivity(new Intent(this, NewsFeed.class));
+                break;
+            }
         }
         overridePendingTransition(0, 0);
         return true;
